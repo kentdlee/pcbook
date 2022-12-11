@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Parallel Programming'
-copyright = '2022, Kent D. Lee'
+copyright = '2022, 2023, Kent D. Lee'
 author = 'Kent D. Lee'
 
 
