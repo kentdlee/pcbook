@@ -136,9 +136,9 @@ many instances of a program in parallel in what is called an *ensemble*
 calcualation. In *ensemble* computation a program is run more than once because
 there is some statistical nature to the calculation and running more than one
 instance helps to determine an optimal solution. At other times a parallel
-computation just divides up really a really large dataset into small quantities
-because they can then be solved in a reasonable amount of time and the results
-can be stitched back together. Let's consider some real life examples.
+computation just divides up a really large dataset into small quantities because
+they can then be solved in a reasonable amount of time and the results can be
+stitched back together. Let's consider some real life examples.
 
 Nuclear Fusion
 ----------------
@@ -882,18 +882,344 @@ each question with a short paragraph.
 .. ++++++++++++++++
 
 
-
-
-
-
-Chapter 4: Programming Models
+Chapter 4: Threading
 ================================
+
+This chapter explores hardware organization of program execution. Specifically,
+it concentrates on the threading model of execution. However, many of the
+principles of multi-threaded applications apply to multi-process parallel
+programs as well. The chapter will briefly point out differences to be further
+explained in subsequent chapters. Java has a nice threading library. Python, C,
+and C++ also include the ability to write multi-threaded programs. In a certain
+sense, multi-threaded programs are the easiest parallel programs to write. But
+that ease of programming is also a hindrance as well. The rest of this chapter
+will elaborate to provide you with some multi-threading skills and knowledge of
+the strengths and weaknesses of multi-threaded programs.
+
+In this and subsequent chapters, it may be useful to plot the running time of
+various implementations of code. While there are many ways to plot data, the
+`plot program <https://kentdlee.github.io/CS2Plus/build/html/chap2/chap2.html#computational-complexity>`_
+downloadable from this link is useful in quickly viewing plots. The referenced
+page provides the plotting program, called *PlotData.py*, and a sample program that
+demonstrates how to create a plot data file.
 
 The Run-time Stack and Heap
 ++++++++++++++++++++++++++++
 
-Critical Sections 
-++++++++++++++++++
+.. _memorg:
+
+.. figure:: images/memoryorg.png
+
+  Memory Organization of an Executing Program
+
+All modern programming languages organize memory as pictured in
+:numref:`memorg`. Alan Turing, at the dawn of electronic computing determined
+that programs could be stored in the memory of the computer, like the data that
+the program operates on. The term stored-program computer was born.
+
+In the late 1950's to around 1960, IBM developed the first modern programming
+language, Algol 60 :cite:p:`algol60`. It supported nested functions and
+recursion. Nested function definitions are largely possible due to scoped
+references in a programming language which is not a parallel programming
+concept, but can be used in parallel programs. To support recursion and function
+calling in general, a run-time stack is required. Each time a function is called
+a stack frame is pushed onto a run-time stack which holds the local variables of
+the called function along with state information about where the program is in
+the execution of that function. When a function returns, its corresponding stack
+frame is popped from the run-time stack. In a parallel program, every thread or
+process has its own run-time stack.
+
+When a program creates data or an object *dynamically* it is creating an
+allocation on the heap. In a multi-threaded program, the heap is shared between
+all the threads of the program. This makes it very convenient to share data
+within a multi-threaded program. However, it also means that all threads must be
+co-located on the same node or computer. Threading relies on shared memory in
+the application. 
+
+Static data refers to data that is statically allocated and is used for storing
+globally accessible data within a program. Typically statically allocated data
+is used for storing constant values in a shared memory program. It can also be
+used to store a single instance of a variable. Static data is shared between
+threads.
+
+A First Thread Example 
+++++++++++++++++++++++++
+   
+.. code-block:: java 
+   :name: threadex1
+   :caption:  A First Thread Example named ThreadTest.java 
+   :linenos:
+
+   class RunnableDemo implements Runnable {
+      private Thread t;
+      private String threadName;
+      
+      RunnableDemo( String name) {
+         threadName = name;
+         System.out.println("Creating " +  threadName );
+      }
+
+      @Override
+      public void run() {
+         System.out.println("Running " +  threadName );
+         for(int i = 20; i > 0; i--) {
+            System.out.println("Thread: " + threadName + ", " + i);
+         }
+
+         System.out.println("Thread " +  threadName + " exiting.");
+      }
+   }
+
+   public class TestThread {
+
+      public static void main(String args[]) {
+         Thread t1 = new Thread(new RunnableDemo( "Thread-1"));
+         t1.start();
+         
+         Thread t2 = new Thread(new RunnableDemo( "Thread-2"));
+         t2.start();
+
+         try {
+            t1.join();
+            t2.join();
+         } catch (InterruptedException ex) {
+         }
+      }
+   }
+
+
+In Java, to create threads, you create a *Thread* object and start it. A thread object 
+is created over a *Runnable* as shown in :numref:`threadex1`. *Runnable* is an abstract 
+base class that must be inherited from and the *run* method must be overridden. 
+
+The use of @Override is technically not required above. But using it means that
+if you accidentally changed the signature of the method or mispelled it, the
+compiler would flag that mistake for you.
+
+Notice that while you override the *run* method, in the main program you *start*
+the thread. That's because there is some startup cost to starting a thread and
+the *start* method takes care of some of this housekeeping and calls *run* on
+its *Runnable* once that housekeeping is done. The *start* is called by the
+current, or *parent*, thread. The *run* is executed in the new thread.
+
+Finally notice that *join* is called from the parent thread. When *join* is called, 
+the parent thread *blocks*, waiting for the child thread to exit. 
+
+Anonymous Runnables
++++++++++++++++++++++
+
+The idiom of defining a Runnable, creating a Thread over that Runnable, and 
+calling start on that new Thread is written enough that Java provides a convenient 
+short-circuit to having define a new Runnable class each time by definining an 
+anonymous inner class. 
+
+.. code-block:: java 
+   :name: threadex2
+   :caption:  Anonymous Runnable
+   :linenos:
+
+   public class AnonTestThread {
+      public static void main(String args[]) {
+         Thread t = new Thread(new Runnable() {
+               @Override
+               public void run() {
+                  for(int i = 20; i > 0; i--) {
+                     System.out.println("Counting: " + i);
+                  }
+
+                  System.out.println("Thread exiting.");
+               }
+         });
+         t.start();
+         try {
+            t.join();
+         } catch (InterruptedException ex) {
+         }
+      }
+   }
+
+The code in :numref:`threadex2` creates an instance of an anonymous (i.e. no
+name is provided) inner class that extends the *Runnable* class. Notice that 
+in this case the anonymous Runnable does not have arguments being passed to it. 
+
+Thread-Safety and Concurrency
++++++++++++++++++++++++++++++
+
+.. code-block:: java 
+   :name: threadex3
+   :caption:  Counting without Synchronization
+   :linenos:
+
+   import java.util.ArrayList;
+
+   public class DefectiveCountingThreads {
+      static int count = 0;
+      static int numThreads = 100;
+
+      public static void main(String args[]) {
+         ArrayList<Thread> threads = new ArrayList<>();
+
+         for (int k=0;k<numThreads;k++) {
+               Thread t = new Thread(new Runnable() {
+                           @Override
+                           public void run() {
+                              for(int i = 200; i > 0; i--) {
+                                 count += 1;
+                              }
+                           }
+                     });
+               threads.add(t);
+         }
+
+         for (int k=0;k<numThreads;k++)
+               threads.get(k).start();
+
+         try {
+               for (int k=0;k<numThreads;k++)
+                  threads.get(k).join();
+         } catch (InterruptedException ex) {}
+
+         System.out.println("The count is " + count);
+      }
+   }
+
+
+In any thread-based parallel program, synchronization of the threads and
+communication between them is required at points within the program. To
+accomplish either of these goals in a threading environment, the threads use
+memory that is shared between the threads of the program.
+
+However, each thread may have separate cache and their own copies of data in
+shared memory. Each thread must operate on data in a thread-safe
+manner. Thankfully there is a mechanism for thread-safety called *atomic*
+instructions. On top of *atomic* instructions, other more complex synchronization 
+and communication instructures can be implemented. 
+
+Consider the program given in :numref:`threadex3`. Running this program, results in 
+non-deterministic behavior as shown here. 
+
+.. code-block:: bash 
+
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   The count is 20000
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   The count is 19778
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   The count is 19973
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   The count is 20000
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ 
+
+
+The issue is that *count += 1* is not an atomic operation. It is composed of
+several instructions including at least a load, addition, and store instruction.
+It doesn't matter whether this is *Java*, *Python*, *C*, or any other language
+because any language is implemented in terms of machine instructions of the CPU. 
+
+For this program to work deterministically, there needs to be some support from
+the CPU to make sure that the instructions needed to execute *count += 1* must
+be executed as a group. This is called a *critical section* of this parallel
+program. A critical section can be protected by the use of one or more *atomic* 
+instructions which are covered in more detail later in this text. 
+
+Java runs on a virtual machine which has facilities for providing the necessary
+means for implementing critical sections. In particular, a relatively low-level
+synchronization primitive called a *Lock* is incorporated to each and every Java
+object. A *Lock* is acquired by a thread before a critical section. Other
+threads that try to acquire the lock will be blocked, waiting to acquire it.
+When the thread with the lock exits its critical section it *releases* the lock.
+This allows another thread that is waiting for the lock to acquire it and
+execute its critical section. In this manner, the code that increments the counter 
+can be serialized between all the threads. 
+
+Acquiring and releasing a lock must be done with care. If a lock is acquired and
+not released in a parallel program, a *deadlock* is likely to occur. In Java,
+there is some care taken to insure that acquires are always matched with a
+release by use of a keyword called *synchronized*. In one version of using
+*synchronized*, a method may be declared to be synchronized. In that case, the
+object on which the method is declared to be synchronized acquires the lock on
+that object before it is executed and released when the method exits.
+
+.. code-block:: java 
+   :name: threadex4
+   :caption:  An Errant Attempt at Synchronization
+   :linenos:
+
+   ...;
+   Thread t = new Thread(new Runnable() {
+               public synchronized void addOne() {
+                  count += 1;
+               }
+
+               @Override
+               public void run() {
+                  for(int i = 200; i > 0; i--) {
+                     addOne();
+                  }
+               }
+         });
+   ...;
+
+In :numref:`threadex4` we have defined a method to by synchronized. In many
+circumstances declaring a method to be synchronized will fix synchronization
+issues when the method contains a critical section. However, in this case, it is
+a misguided attempt at fixing the problem. 
+
+.. code-block:: java 
+   :name: threadex5
+   :caption:  Correctly Synchronizing Counting
+   :linenos:
+
+   public static void main(String args[]) {
+      ArrayList<Thread> threads = new ArrayList<>();
+
+      for (int k=0;k<numThreads;k++) {
+         Thread t = new Thread(new Runnable() {
+                     @Override
+                     public void run() {
+                           for(int i = 200; i > 0; i--) {
+                              synchronized(threads) {
+                                 count += 1;
+                              }  
+                           }
+                     }
+                  });
+         threads.add(t);
+      }
+   ...;
+
+
+The issue is that the synchronization needs to be between all the threads and
+this synchronized method is for the method *addOne* on a Runnable object and
+there is one Runnable object for each thread. We are synchronizing on a
+different object for each object. Remember, there is a lock per object in Java,
+not per method. For this purpose, the *threads* object is one instance that is
+visible to all the threads. :numref:`threadex5` correctly adds a critical
+section to the code to insure that counting is deterministic in this parallel
+program.
+
+The code in :numref:`threadex5` also demonstrates the other means of using the
+synchronized keyword in a Java program. You can declare a region of your code to
+be synchronized on a arbitrary object to implement a critical section. To enter
+the critical section, the lock on the specified object is acquired and it is
+released when it exits the block of code.
+
+The Java Concurrency Tutorial :cite:p:`javaconcurrency` has an excellent
+discussion of how this applies to Java. Take a look at this tutorial to learn 
+about threads and how to create and run them. 
+
+https://stackoverflow.com/questions/40250112/fastest-way-to-measure-elapsed-time-in-java
+
+
+https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ThreadPoolExecutor.html
+
+https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html
+
+
+https://www.baeldung.com/thread-pool-java-and-guava
+
+
+https://www.capitalone.com/tech/software-engineering/java-streams-explained-simple-example/
 
 Thread-based Parallelism
 +++++++++++++++++++++++++
