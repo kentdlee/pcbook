@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chapther 1: Introduction &mdash; Parallel Programming  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>Chapter 1: Introduction &mdash; Parallel Programming  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -35,7 +35,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <!-- Local TOC -->
               <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Chapther 1: Introduction</a><ul>
+<li><a class="reference internal" href="#">Chapter 1: Introduction</a><ul>
 <li><a class="reference internal" href="#what-parallel-programs-can-t-do">What Parallel Programs Can’t Do</a></li>
 <li><a class="reference internal" href="#parallel-applications">Parallel Applications</a><ul>
 <li><a class="reference internal" href="#nuclear-fusion">Nuclear Fusion</a></li>
@@ -135,11 +135,15 @@
 <li><a class="reference internal" href="#the-run-time-stack-and-heap">The Run-time Stack and Heap</a></li>
 <li><a class="reference internal" href="#a-first-thread-example">A First Thread Example</a></li>
 <li><a class="reference internal" href="#anonymous-runnables">Anonymous Runnables</a></li>
-<li><a class="reference internal" href="#thread-safety-and-concurrency">Thread-Safety and Concurrency</a></li>
+<li><a class="reference internal" href="#critical-sections">Critical Sections</a></li>
+<li><a class="reference internal" href="#concurrency-and-thread-safety">Concurrency and Thread-Safety</a></li>
 <li><a class="reference internal" href="#thread-based-parallelism">Thread-based Parallelism</a></li>
 <li><a class="reference internal" href="#process-based-parallelism">Process-based Parallelism</a></li>
 <li><a class="reference internal" href="#locks">Locks</a></li>
 <li><a class="reference internal" href="#queues">Queues</a></li>
+<li><a class="reference internal" href="#id26">Chapter Summary</a></li>
+<li><a class="reference internal" href="#id27">Review Questions</a></li>
+<li><a class="reference internal" href="#id28">Programming Problems</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#chapter-5-c-programming">Chapter 5: C Programming</a><ul>
@@ -161,13 +165,13 @@
 </ul>
 </li>
 <li><a class="reference internal" href="#chapter-7-shared-memory">Chapter 7: Shared Memory</a><ul>
-<li><a class="reference internal" href="#id26">Locks</a></li>
-<li><a class="reference internal" href="#id27">Queues</a></li>
+<li><a class="reference internal" href="#id29">Locks</a></li>
+<li><a class="reference internal" href="#id30">Queues</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#chapther-8-distributed-multprocessing">Chapther 8: Distributed Multprocessing</a><ul>
-<li><a class="reference internal" href="#id28">Locks</a></li>
-<li><a class="reference internal" href="#id29">Queues</a></li>
+<li><a class="reference internal" href="#id31">Locks</a></li>
+<li><a class="reference internal" href="#id32">Queues</a></li>
 <li><a class="reference internal" href="#serialization">Serialization</a></li>
 <li><a class="reference internal" href="#proxies">Proxies</a></li>
 <li><a class="reference internal" href="#libraries">Libraries</a></li>
@@ -176,9 +180,9 @@
 <li><a class="reference internal" href="#chapter-9-python-multiprocessing">Chapter 9: Python Multiprocessing</a><ul>
 <li><a class="reference internal" href="#the-gil">The GIL</a></li>
 <li><a class="reference internal" href="#process">Process</a></li>
-<li><a class="reference internal" href="#id30">Locks</a></li>
+<li><a class="reference internal" href="#id33">Locks</a></li>
 <li><a class="reference internal" href="#managers">Managers</a></li>
-<li><a class="reference internal" href="#id31">Queues</a></li>
+<li><a class="reference internal" href="#id34">Queues</a></li>
 <li><a class="reference internal" href="#pool">Pool</a></li>
 <li><a class="reference internal" href="#map">Map</a></li>
 <li><a class="reference internal" href="#starmap">Starmap</a></li>
@@ -202,7 +206,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Chapther 1: Introduction</li>
+      <li>Chapter 1: Introduction</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -214,8 +218,8 @@
              
   <div class="toctree-wrapper compound">
 </div>
-<div class="section" id="chapther-1-introduction">
-<h1>Chapther 1: Introduction<a class="headerlink" href="#chapther-1-introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="chapter-1-introduction">
+<h1>Chapter 1: Introduction<a class="headerlink" href="#chapter-1-introduction" title="Permalink to this headline">¶</a></h1>
 <p>Much is happening in the world of parallel programming. With the end of Moore’s
 Law approaching and the problems we solve getting bigger, with greater amounts of
 data, the need to solve problems using parallel techniques has never been
@@ -248,9 +252,9 @@ will be referenced in the text. There is an optional chapter on C++ programming
 as well.</p>
 <div class="section" id="what-parallel-programs-can-t-do">
 <h2>What Parallel Programs Can’t Do<a class="headerlink" href="#what-parallel-programs-can-t-do" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-default" id="id141">
+<div class="figure align-default" id="id144">
 <span id="figcomplexity"></span><img alt="_images/CommonComplexities800.png" src="_images/CommonComplexities800.png" />
-<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Common Computational Complexity Plots</span><a class="headerlink" href="#id141" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 1 </span><span class="caption-text">Common Computational Complexity Plots</span><a class="headerlink" href="#id144" title="Permalink to this image">¶</a></p>
 </div>
 <p>Computational complexity is the study of how programs perform as the amount of
 data they process scales up. In <a class="reference internal" href="#figcomplexity"><span class="std std-numref">Fig. 1</span></a> you can see common
@@ -331,10 +335,10 @@ sustained nuclear fusion reaction. In pursuit of clean, unlimited energy there
 are many experiments being conducted at a few places in the world. These
 experiments, including the
 <a class="reference external" href="https://www.newscientist.com/article/2336385-korean-nuclear-fusion-reactor-achieves-100-millionc-for-30-seconds/">K-Star Tokomak</a>
-<span id="id1">[<a class="reference internal" href="#id135" title="G. S. Lee and the KSTAR Team. Design and construction of the kstar tokamak. Technical Report, National Fusion R&amp;D Center, Korea Basic Science Institute, Taejon, Republic of Korea, 1995. URL: https://www.osti.gov/etdeweb/servlets/purl/20261539.">LtKT95</a>]</span>, gather large quantities of data that must be analyzed to
+<span id="id1">[<a class="reference internal" href="#id138" title="G. S. Lee and the KSTAR Team. Design and construction of the kstar tokamak. Technical Report, National Fusion R&amp;D Center, Korea Basic Science Institute, Taejon, Republic of Korea, 1995. URL: https://www.osti.gov/etdeweb/servlets/purl/20261539.">LtKT95</a>]</span>, gather large quantities of data that must be analyzed to
 see how they might modify the tokomak for the next experiment. Time between experiments
 is critical when running the tokomak. Data analysis must be fast to give scientists maximum feedback with minimal wait. Parallel
-computation is of the utmost importance <span id="id2">[<a class="reference internal" href="#id136" title="Ralph Kube. Moving fusion research into the big-and-fast data lane. Technical Report, DOE, 2020. URL: https://theory.pppl.gov/research/DOE%20Highlights/2020/DOEhighlight20200729Kube.pdf.">Kub20</a>]</span>.</p>
+computation is of the utmost importance <span id="id2">[<a class="reference internal" href="#id139" title="Ralph Kube. Moving fusion research into the big-and-fast data lane. Technical Report, DOE, 2020. URL: https://theory.pppl.gov/research/DOE%20Highlights/2020/DOEhighlight20200729Kube.pdf.">Kub20</a>]</span>.</p>
 </div>
 <div class="section" id="covid-19">
 <h3>Covid-19<a class="headerlink" href="#covid-19" title="Permalink to this headline">¶</a></h3>
@@ -353,7 +357,7 @@ applications are widely used to perform fluid flow simulations. Consider the
 flow of air over an airplane wing. A simulation helps predict how air will
 behave given the construction of the wing. Rogers, et al., wrote an interesting
 paper describing the challenges in writing a CFD for this purpose
-<span id="id3">[<a class="reference internal" href="#id138" title="COMPUTATION OF VISCOUS FLOW FOR A BOEING 777 AIRCRAFT IN LANDING CONFIGURATION, 2000. URL: https://tinyurl.com/2vvp8473.">Rog00</a>]</span>. This paper is interesting because it was written during
+<span id="id3">[<a class="reference internal" href="#id141" title="COMPUTATION OF VISCOUS FLOW FOR A BOEING 777 AIRCRAFT IN LANDING CONFIGURATION, 2000. URL: https://tinyurl.com/2vvp8473.">Rog00</a>]</span>. This paper is interesting because it was written during
 the transition from vector processor supercomputing to today’s distributed
 supercomputing. The paper provides a little insight into the challenges of and
 optimizations for both architectures and mentions some early distributed
@@ -362,7 +366,7 @@ computing libraries that were used in distributed supercomputing.</p>
 conducting fluids behave. MHD solvers are specialized versions of CFD solvers.
 The concept of electrical current also applies to gravitational properties in
 astrophysics. One such application, the Wombat application was written as a
-scalable MHD application <span id="id4">[<a class="reference internal" href="#id137" title="P. J. Mendygral, N. Radcliffe, K. Kandalla, D. Porter, B. J. O'Neill, C. Nolting, P. Edmon, J. M. F. Donnert, and T. W. Jones. WOMBAT: a scalable and high-performance astrophysical magnetohydrodynamics code. The Astrophysical Journal Supplement Series, 228(2):23, feb 2017. URL: https://doi.org/10.3847%2F1538-4365%2Faa5b9c, doi:10.3847/1538-4365/aa5b9c.">MRK+17</a>]</span>.</p>
+scalable MHD application <span id="id4">[<a class="reference internal" href="#id140" title="P. J. Mendygral, N. Radcliffe, K. Kandalla, D. Porter, B. J. O'Neill, C. Nolting, P. Edmon, J. M. F. Donnert, and T. W. Jones. WOMBAT: a scalable and high-performance astrophysical magnetohydrodynamics code. The Astrophysical Journal Supplement Series, 228(2):23, feb 2017. URL: https://doi.org/10.3847%2F1538-4365%2Faa5b9c, doi:10.3847/1538-4365/aa5b9c.">MRK+17</a>]</span>.</p>
 </div>
 <div class="section" id="ai">
 <h3>AI<a class="headerlink" href="#ai" title="Permalink to this headline">¶</a></h3>
@@ -376,7 +380,7 @@ new inputs isn’t that interesting. It is rather mechanical.</p>
 <p>Getting input data, sampling input data, preparing the data for model training,
 and model training itself are all tasks that can be parallelized. Consider the
 Alpha Zero program. Andrew Young has an excellent article on how they parallelized
-some of the Alpha Zero training <span id="id5">[<a class="reference internal" href="#id139" title="Anthony Young. Lessons from alpha zero (part 5): performance optimization. Medium.com, 2018. URL: https://medium.com/oracledevs/lessons-from-alpha-zero-part-5-performance-optimization-664b38dc509e.">You18</a>]</span>.</p>
+some of the Alpha Zero training <span id="id5">[<a class="reference internal" href="#id142" title="Anthony Young. Lessons from alpha zero (part 5): performance optimization. Medium.com, 2018. URL: https://medium.com/oracledevs/lessons-from-alpha-zero-part-5-performance-optimization-664b38dc509e.">You18</a>]</span>.</p>
 </div>
 </div>
 <div class="section" id="chapter-summary">
@@ -418,9 +422,9 @@ interesting facts about each system.</p></li>
 </div>
 <div class="section" id="chapter-2-computer-architecture">
 <h1>Chapter 2: Computer Architecture<a class="headerlink" href="#chapter-2-computer-architecture" title="Permalink to this headline">¶</a></h1>
-<div class="figure align-default" id="id142">
+<div class="figure align-default" id="id145">
 <span id="arch"></span><img alt="_images/computer.png" src="_images/computer.png" />
-<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">Computer Architecture</span><a class="headerlink" href="#id142" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 2 </span><span class="caption-text">Computer Architecture</span><a class="headerlink" href="#id145" title="Permalink to this image">¶</a></p>
 </div>
 <p>To understand how to parallelize and get the most out of performance, it is best
 to know something about computer architecture. There are many architectures and
@@ -439,9 +443,9 @@ other related concepts that are not covered in this chapter. We’ll start by
 talking about processes and how they are executed on a system.</p>
 <div class="section" id="multitasking-and-multiprocessing">
 <h2>Multitasking and Multiprocessing<a class="headerlink" href="#multitasking-and-multiprocessing" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-default" id="id143">
+<div class="figure align-default" id="id146">
 <span id="multitask"></span><img alt="_images/multitasking.png" src="_images/multitasking.png" />
-<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">Multitasking in the OS</span><a class="headerlink" href="#id143" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 3 </span><span class="caption-text">Multitasking in the OS</span><a class="headerlink" href="#id146" title="Permalink to this image">¶</a></p>
 </div>
 <p>All modern operating systems support <em>multitasking</em>. Multitasking is an
 operating system feature where more than one process may be <em>active</em> in the OS.
@@ -467,9 +471,9 @@ of it. In a multiprocessing system more than one process is running at the same
 time. The scheduler then as multiple processes all executing timeslices before
 the OS switches to the next. Nothing changes in <a class="reference internal" href="#multitask"><span class="std std-numref">Fig. 3</span></a> except
 that more then one process is active at any point in time.</p>
-<div class="figure align-default" id="id144">
+<div class="figure align-default" id="id147">
 <span id="frontiernode"></span><img alt="https://docs.olcf.ornl.gov/_images/Frontier_Node_Diagram.jpg" src="https://docs.olcf.ornl.gov/_images/Frontier_Node_Diagram.jpg" />
-<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">Frontier Node Architecture</span><a class="headerlink" href="#id144" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 4 </span><span class="caption-text">Frontier Node Architecture</span><a class="headerlink" href="#id147" title="Permalink to this image">¶</a></p>
 </div>
 <p>Many of the motherboards today for high-performance computers support two CPUs.
 They have two sockets in which to seat a CPU. One CPU may have 64 cores. So
@@ -502,12 +506,12 @@ parallel as possible and multiprocessing OS’s make that possible.</p>
 </div>
 <div class="section" id="pipelining">
 <h2>Pipelining<a class="headerlink" href="#pipelining" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-default" id="id145">
+<div class="figure align-default" id="id148">
 <span id="pipeline"></span><img alt="_images/pipeline.png" src="_images/pipeline.png" />
-<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">The MIPS pipeline</span><a class="headerlink" href="#id145" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 5 </span><span class="caption-text">The MIPS pipeline</span><a class="headerlink" href="#id148" title="Permalink to this image">¶</a></p>
 </div>
 <p>Instructions for CPUs are data and they are stored in the memory of the
-computer. That was one of the things John von Neuman <span id="id6">[<a class="reference internal" href="#id45" title="Wikipedia. Von Neumann architecture. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Von_Neumann_architecture.">Wik22f</a>]</span>
+computer. That was one of the things John von Neuman <span id="id6">[<a class="reference internal" href="#id48" title="Wikipedia. Von Neumann architecture. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Von_Neumann_architecture.">Wik22f</a>]</span>
 contributed to the young field of Computer Science. All modern computers are
 built around this von Neumann architecture.</p>
 <p>Machines built around this fundamental principle execute instructions by first
@@ -521,7 +525,7 @@ fetch/decode/execute loop completes. The clock cycle coincides with internal
 circuitry that allows results to be written to memory locations either in memory
 or in hidden internal memory in the CPU.</p>
 <p>In the 1990’s hardware architects like Patterson and Hennesey
-<span id="id7">[<a class="reference internal" href="#id140" title="David A. Patterson and John L. Hennessy. Computer Organization and Design. Morgan Kaufmann Publishers, 2nd edition, 1998. ISBN 15-586-0428-6.">PH98</a>]</span> saw that they could define a couple more stages to the
+<span id="id7">[<a class="reference internal" href="#id143" title="David A. Patterson and John L. Hennessy. Computer Organization and Design. Morgan Kaufmann Publishers, 2nd edition, 1998. ISBN 15-586-0428-6.">PH98</a>]</span> saw that they could define a couple more stages to the
 fetch/decode/execute loop and place internal registers between the stages of
 execution to allow one instruction to be in each stage of execution
 simultaneously. When an instruction completes a stage, it writes its results for
@@ -554,10 +558,10 @@ possible to avoid disrupting the pipeline any longer than necessary.</p>
 is the bigger then storage device, the slower the device operates for storage
 and retrieval. A CPU has very limited storage. Memory can hold Gigabytes of
 space. It cannot be written to or read from as fast as the CPU can execute
-<span id="id8">[<a class="reference internal" href="#id47" title="Wikipedia. Memory timings. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Memory_timings.">Wik22d</a>]</span>. Memory operates on the clock cycle like the CPU. On a 1000GHz
+<span id="id8">[<a class="reference internal" href="#id50" title="Wikipedia. Memory timings. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Memory_timings.">Wik22d</a>]</span>. Memory operates on the clock cycle like the CPU. On a 1000GHz
 system the clock cycle is 1 ns. Memory referred to as DDR3-2000 takes 7 clock
 cycles from when you supply the address to when the data is available. With DDR4
-it is 4 cycles to read data <span id="id9">[<a class="reference internal" href="#id51" title="System Verilog Website. DDR4 SDRAM - Understanding Timing Parameters. Systemverilog.io, accessed 2022. URL: https://www.systemverilog.io/understanding-ddr4-timing-parameters.">Web22</a>]</span>. A write to DDR4 memory needs 5
+it is 4 cycles to read data <span id="id9">[<a class="reference internal" href="#id54" title="System Verilog Website. DDR4 SDRAM - Understanding Timing Parameters. Systemverilog.io, accessed 2022. URL: https://www.systemverilog.io/understanding-ddr4-timing-parameters.">Web22</a>]</span>. A write to DDR4 memory needs 5
 cycles to complete. To keep the pipeline running smoothly, a smaller and faster
 memory, between the DDR RAM and the CPU is employed. This smaller, fast memory
 is called a cache. Caches appear frequently in computer architectures. The cache
@@ -587,9 +591,9 @@ meant to be a complete discussion of their design or implementation.</p>
 </div>
 <div class="section" id="direct-mapped-and-associative-caches">
 <h3>Direct-Mapped and Associative Caches<a class="headerlink" href="#direct-mapped-and-associative-caches" title="Permalink to this headline">¶</a></h3>
-<div class="figure align-default" id="id146">
+<div class="figure align-default" id="id149">
 <span id="directmapped"></span><img alt="_images/directmapped.png" src="_images/directmapped.png" />
-<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">Direct-Mapped Cache</span><a class="headerlink" href="#id146" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">Direct-Mapped Cache</span><a class="headerlink" href="#id149" title="Permalink to this image">¶</a></p>
 </div>
 <p>The RAM of the computer is designed as one long continuous array of bytes. Each
 byte has a unique address so that all bytes of the RAM are randomly accessible,
@@ -597,7 +601,7 @@ which means we can read from or write to any byte of memory in O(1) time, even
 though it takes a few cycles to complete.</p>
 <p>While not shown in the picture in <a class="reference internal" href="#directmapped"><span class="std std-numref">Fig. 6</span></a>, caches store blocks of
 data of some block size. Typically in modern computers this block size, called a
-<em>cache line</em>, is 64 bytes <span id="id10">[<a class="reference internal" href="#id50" title="Igor Ostrovsky. Gallery of Processor Cache Effects. Igor Ostrovsky, accessed 2022. URL: http://igoro.com/archive/gallery-of-processor-cache-effects/.">Ost22</a>]</span>. Since 64 bytes can be read in about
+<em>cache line</em>, is 64 bytes <span id="id10">[<a class="reference internal" href="#id53" title="Igor Ostrovsky. Gallery of Processor Cache Effects. Igor Ostrovsky, accessed 2022. URL: http://igoro.com/archive/gallery-of-processor-cache-effects/.">Ost22</a>]</span>. Since 64 bytes can be read in about
 the same number of cycles as one byte, reading the extra data helps with
 efficiency in the cache by taking advantage of <em>spatial locality</em> in a program.
 Spatial locality refers to the fact that data near other recently accessed data
@@ -611,9 +615,9 @@ maps to the same block within the cache, but the cache can only hold one of
 those blocks, or cache lines, at a time. For instance, in a 32K cache, the 64
 bytes at address 0 would be direct mapped to the same 64 bytes in the cache as
 the data at address 32K, 64K, 96K, and so on in the RAM.</p>
-<div class="figure align-default" id="id147">
+<div class="figure align-default" id="id150">
 <span id="assocmem"></span><img alt="_images/assocmem.png" src="_images/assocmem.png" />
-<p class="caption"><span class="caption-number">Fig. 7 </span><span class="caption-text">Fully-Associative Cache</span><a class="headerlink" href="#id147" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 7 </span><span class="caption-text">Fully-Associative Cache</span><a class="headerlink" href="#id150" title="Permalink to this image">¶</a></p>
 </div>
 <p>On the other extreme some caches allow cache lines to be stored anywhere within
 the cache memory. This type of cache is called associative memory. It features
@@ -664,7 +668,7 @@ the cache line is <em>dirty</em> and needs to be written to RAM before it is dis
 <p>Because there can be two or more data caches on a system, when one cache is written
 to by a CPU it means that the other cache, if it has a copy of the same block, has
 an invalid copy. To handle that one cache can signal to other caches that the block
-is invalid via a cache coherence protocol <span id="id11">[<a class="reference internal" href="#id48" title="Wikipedia. Cache coherence. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Cache_coherence.">Wik22b</a>]</span>.</p>
+is invalid via a cache coherence protocol <span id="id11">[<a class="reference internal" href="#id51" title="Wikipedia. Cache coherence. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Cache_coherence.">Wik22b</a>]</span>.</p>
 <p>Cache coherence refers to the fact that all caches and memory on a computer should be
 in sync in terms of their contents. If you don’t have cache coherence on a system then
 special steps may need to be taken to guarantee that you can count on the values you are
@@ -702,9 +706,9 @@ introduced we’ll revisit atomic instructions.</p>
 </div>
 <div class="section" id="virtual-memory">
 <h2>Virtual Memory<a class="headerlink" href="#virtual-memory" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-default" id="id148">
+<div class="figure align-default" id="id151">
 <span id="virtualmem"></span><img alt="_images/virtualmem.png" src="_images/virtualmem.png" />
-<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">Virtual Memory Snapshot</span><a class="headerlink" href="#id148" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 8 </span><span class="caption-text">Virtual Memory Snapshot</span><a class="headerlink" href="#id151" title="Permalink to this image">¶</a></p>
 </div>
 <p>All modern Operating Systems and CPUs are 64-bit. The 64-bits refers to the size
 of a pointer on the system. A pointer is an address of a byte in the RAM of the
@@ -758,13 +762,13 @@ lead to thrashing as well if too little memory is left for other processes.</p>
 than one CPU socket. In these configurations, to allow faster access to memory
 by more than one CPU, the memory may be physically split into <em>nodes</em> or <em>zones</em>
 where one zone is close to one CPU and another zone is closer to another CPU
-<span id="id12">[<a class="reference internal" href="#id57" title="Steve Gordon. Driving in the Fast Lane - CPU Pinning and NUMA Topology Awareness in OpenStack Compute. Redhat Blog, 2015. URL: https://www.redhat.com/en/blog/driving-fast-lane-cpu-pinning-and-numa-topology-awareness-openstack-compute.">Gor15</a>]</span>. The zones and CPUs (and their cores) are connected via an
+<span id="id12">[<a class="reference internal" href="#id60" title="Steve Gordon. Driving in the Fast Lane - CPU Pinning and NUMA Topology Awareness in OpenStack Compute. Redhat Blog, 2015. URL: https://www.redhat.com/en/blog/driving-fast-lane-cpu-pinning-and-numa-topology-awareness-openstack-compute.">Gor15</a>]</span>. The zones and CPUs (and their cores) are connected via an
 interconnection network on the motherboard. That interconnection network
 provides fast access to the CPU closest to its zone, but also enables access at
 a slower speed from the other CPU socket.</p>
-<div class="figure align-default" id="id149">
+<div class="figure align-default" id="id152">
 <span id="crossbar"></span><img alt="_images/crossbar.png" src="_images/crossbar.png" />
-<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">A Crossbar Interconnect</span><a class="headerlink" href="#id149" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 9 </span><span class="caption-text">A Crossbar Interconnect</span><a class="headerlink" href="#id152" title="Permalink to this image">¶</a></p>
 </div>
 <p>There are many different connection topologies that are possible. A cross-bar
 switch would provide simultaneous access to all cores and memory zones. NUMA
@@ -777,9 +781,9 @@ Growth concerns in the interconnect isn’t just expense. It is also the rate of
 failure, power requirements, cooling requirements, and just the motherboard or
 chip real estate. There are many, many problems with architectures that don’t
 scale well.</p>
-<div class="figure align-default" id="id150">
+<div class="figure align-default" id="id153">
 <span id="numaint"></span><img alt="_images/numaint.png" src="_images/numaint.png" />
-<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">A NUMA Interconnect</span><a class="headerlink" href="#id150" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 10 </span><span class="caption-text">A NUMA Interconnect</span><a class="headerlink" href="#id153" title="Permalink to this image">¶</a></p>
 </div>
 <p>Instead of a crossbar interconnect, other interconnects are possible that
 provide the NUMA access to memory without the growth we see with a crossbar
@@ -790,7 +794,7 @@ two memory zones. In this topology, each transit through a switch (the yellow
 just one hop, while to the other zone it takes two hops or twice as long. Both
 CPUs can still access all the memory on the system. It just takes twice as long
 to access a non-local memory zone. This topology conforms to the data gathered
-by using the Linux command <code class="docutils literal notranslate"><span class="pre">numactl</span> <span class="pre">--hardware</span></code> in <span id="id13">[<a class="reference internal" href="#id57" title="Steve Gordon. Driving in the Fast Lane - CPU Pinning and NUMA Topology Awareness in OpenStack Compute. Redhat Blog, 2015. URL: https://www.redhat.com/en/blog/driving-fast-lane-cpu-pinning-and-numa-topology-awareness-openstack-compute.">Gor15</a>]</span>.</p>
+by using the Linux command <code class="docutils literal notranslate"><span class="pre">numactl</span> <span class="pre">--hardware</span></code> in <span id="id13">[<a class="reference internal" href="#id60" title="Steve Gordon. Driving in the Fast Lane - CPU Pinning and NUMA Topology Awareness in OpenStack Compute. Redhat Blog, 2015. URL: https://www.redhat.com/en/blog/driving-fast-lane-cpu-pinning-and-numa-topology-awareness-openstack-compute.">Gor15</a>]</span>.</p>
 <p>NUMA organization means that there may be some advantage to an HPC application
 to have processor and data <em>affinity</em> which can help control where data and
 processes are placed to maximize performance.</p>
@@ -842,7 +846,7 @@ library takes the decision making out of the hands of the programmer.</p>
 across nodes. When programming SHMEM applications the underlying hardware
 architecture is hidden behind the SHMEM abstraction. This impacts the desired
 performance of SHMEM applications. Remedies were suggested, including a mixture
-of MPI and SHMEM <span id="id14">[<a class="reference internal" href="#id49" title="Wikipedia. SHMEM. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/SHMEM.">Wik22e</a>]</span>, which suggests that SHMEM by itself did
+of MPI and SHMEM <span id="id14">[<a class="reference internal" href="#id52" title="Wikipedia. SHMEM. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/SHMEM.">Wik22e</a>]</span>, which suggests that SHMEM by itself did
 not have enough information to get the desired performance from a distributed
 parallel application.</p>
 <p>The art of parallel programming is designing an algorithm that scales and
@@ -873,7 +877,7 @@ available.</p>
 <p>The network interconnect becomes very important in today’s supercomputers.
 Supercomputing has evolved to be synonymous with high-performance distributed
 computing. Each node in a supercomputer is typically a high core count node,
-usually with access to at least one GPU. <span id="id15">[<a class="reference internal" href="#id46" title="Wikipedia. Frontier (supercomputer). Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Frontier_(supercomputer).">Wik22c</a>]</span>. The Frontier
+usually with access to at least one GPU. <span id="id15">[<a class="reference internal" href="#id49" title="Wikipedia. Frontier (supercomputer). Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/Frontier_(supercomputer).">Wik22c</a>]</span>. The Frontier
 system has four GPUs per node. While each node is powerful in itself, the
 problems today’s supercomputers are solving require coordination of multiple
 nodes running on parts of the data of large problems, whether it’s AI related or
@@ -882,7 +886,7 @@ a simulation-based parallel program.</p>
 these distributed parallel programs. While standard NICs will work,
 supercomputers like Frontier employ several advanced NICs per node. Frontier’s
 Cassini NIC is fast and capable of advanced data movement primitives to improve
-both latency and bandwidth <span id="id16">[<a class="reference internal" href="#id55" title="Timothy Prickett Morgan. On the shortest spanning tree of a graph and the traveling salesman problem. The Next Platform, 2022. URL: https://www.nextplatform.com/2022/01/31/crays-slingshot-interconnect-is-at-the-heart-of-hpes-hpc-and-ai-ambitions.">Mor22</a>]</span>. Together with the
+both latency and bandwidth <span id="id16">[<a class="reference internal" href="#id58" title="Timothy Prickett Morgan. On the shortest spanning tree of a graph and the traveling salesman problem. The Next Platform, 2022. URL: https://www.nextplatform.com/2022/01/31/crays-slingshot-interconnect-is-at-the-heart-of-hpes-hpc-and-ai-ambitions.">Mor22</a>]</span>. Together with the
 <em>Rosetta</em> switch, the <em>Slingshot</em> interconnect is the current premiere
 interconnect in the HPC world given that exascale flops has just recently been
 achieved and verified for the first time. There are other examples of fast
@@ -892,8 +896,8 @@ NVidia’s interconnect is Infiniband.</p>
 <p>Like all things in HPC computing, interconnects must scale and cannot create
 bottlenecks. The reason that Slingshot is the premiere interconnect has a lot to
 do with the fact that it can scale and support adaptive routing and congestion
-control to avoid network bottlenecks <span id="id17">[<a class="reference internal" href="#id55" title="Timothy Prickett Morgan. On the shortest spanning tree of a graph and the traveling salesman problem. The Next Platform, 2022. URL: https://www.nextplatform.com/2022/01/31/crays-slingshot-interconnect-is-at-the-heart-of-hpes-hpc-and-ai-ambitions.">Mor22</a>]</span>,
-<span id="id18">[<a class="reference internal" href="#id54" title="Timothy Prickett Morgan. How cray makes ethernet suited for hpc and ai with slingshot. The Next Platform, 2019. URL: https://www.nextplatform.com/2019/08/16/how-cray-makes-ethernet-suited-for-hpc-and-ai-with-slingshot.">Mor19</a>]</span>.</p>
+control to avoid network bottlenecks <span id="id17">[<a class="reference internal" href="#id58" title="Timothy Prickett Morgan. On the shortest spanning tree of a graph and the traveling salesman problem. The Next Platform, 2022. URL: https://www.nextplatform.com/2022/01/31/crays-slingshot-interconnect-is-at-the-heart-of-hpes-hpc-and-ai-ambitions.">Mor22</a>]</span>,
+<span id="id18">[<a class="reference internal" href="#id57" title="Timothy Prickett Morgan. How cray makes ethernet suited for hpc and ai with slingshot. The Next Platform, 2019. URL: https://www.nextplatform.com/2019/08/16/how-cray-makes-ethernet-suited-for-hpc-and-ai-with-slingshot.">Mor19</a>]</span>.</p>
 <p>As parallel programmers we need to be aware of that our code runs in a
 distributed network of nodes. Much of the actual low-level communication is done
 by libraries since programming the actual inter-node communication is a complex
@@ -1016,9 +1020,9 @@ equals sign is a reference and the thing on the right side is either another
 reference or a newly created object. In this case, writing <em>x = 6</em> makes a new
 object and then points <em>x</em> at this object.</p>
 <div class="figboxright docutils container">
-<div class="figure align-default" id="id151">
+<div class="figure align-default" id="id154">
 <span id="xreffig"></span><img alt="_images/xref.png" src="_images/xref.png" />
-<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">A Reference and Object</span><a class="headerlink" href="#id151" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 11 </span><span class="caption-text">A Reference and Object</span><a class="headerlink" href="#id154" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <p>Other literal values may be written in Python as well. Here are some literal
@@ -1151,9 +1155,9 @@ would write something like the code appearing in <a class="reference internal" h
 </pre></div>
 </td></tr></table></div>
 <div class="figboxright docutils container">
-<div class="figure align-default" id="id152">
+<div class="figure align-default" id="id155">
 <span id="dogobjects"></span><img alt="_images/dogobjects.png" src="_images/dogobjects.png" />
-<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">A Couple of Dog Objects</span><a class="headerlink" href="#id152" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 12 </span><span class="caption-text">A Couple of Dog Objects</span><a class="headerlink" href="#id155" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <p>Once created, the dog objects would look like <a class="reference internal" href="#dogobjects"><span class="std std-numref">Fig. 12</span></a> in the memory
@@ -1565,9 +1569,9 @@ the same amount and grouped together are called a <em>block</em>. It is importan
 all statements within a <em>block</em> are indented exactly the same amount. If they
 are not, then Python will complain about inconsistent indentation.</p>
 <div class="figboxcenter docutils container">
-<div class="figure align-default" id="id153">
+<div class="figure align-default" id="id156">
 <span id="blockindent"></span><img alt="_images/blockindent.png" src="_images/blockindent.png" />
-<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Adjusting Indentation in Wing IDE 101</span><a class="headerlink" href="#id153" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 13 </span><span class="caption-text">Adjusting Indentation in Wing IDE 101</span><a class="headerlink" href="#id156" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <p>Because indentation is so important to Python, the Wing IDE 101 lets you select
@@ -2602,9 +2606,9 @@ interfaces. Python provides an interface to this toolkit via the tkinter module.
 to events that occur in the program. The events occur as a result of mouse
 clicks, dragging the mouse, button presses, and menu items being selected.</p>
 <div class="figboxcenter docutils container">
-<div class="figure align-default" id="id154">
+<div class="figure align-default" id="id157">
 <span id="drawpic"></span><img alt="_images/Draw800wide.png" src="_images/Draw800wide.png" />
-<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">The Draw Program</span><a class="headerlink" href="#id154" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 14 </span><span class="caption-text">The Draw Program</span><a class="headerlink" href="#id157" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <p>To build a GUI you place widgets in a window. Widgets are any element of a GUI
@@ -2633,9 +2637,9 @@ for laying out a window. The <em>place</em> layout manager lets you place widget
 particular location within a window. In this text, we’ll use the <em>pack</em> layout
 manager to layout our drawing application.</p>
 <div class="figboxcenter docutils container">
-<div class="figure align-default" id="id155">
+<div class="figure align-default" id="id158">
 <span id="thegui"></span><img alt="_images/labelledGUI.png" src="_images/labelledGUI.png" />
-<p class="caption"><span class="caption-number">Fig. 15 </span><span class="caption-text">The Draw Program Layout</span><a class="headerlink" href="#id155" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 15 </span><span class="caption-text">The Draw Program Layout</span><a class="headerlink" href="#id158" title="Permalink to this image">¶</a></p>
 </div>
 </div>
 <p>When packing widgets, to get the proper layout, sometimes you need to create a
@@ -3783,16 +3787,16 @@ page provides the plotting program, called <em>PlotData.py</em>, and a sample pr
 demonstrates how to create a plot data file.</p>
 <div class="section" id="the-run-time-stack-and-heap">
 <h2>The Run-time Stack and Heap<a class="headerlink" href="#the-run-time-stack-and-heap" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-default" id="id156">
+<div class="figure align-default" id="id159">
 <span id="memorg"></span><img alt="_images/memoryorg.png" src="_images/memoryorg.png" />
-<p class="caption"><span class="caption-number">Fig. 16 </span><span class="caption-text">Memory Organization of an Executing Program</span><a class="headerlink" href="#id156" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-number">Fig. 16 </span><span class="caption-text">Memory Organization of an Executing Program</span><a class="headerlink" href="#id159" title="Permalink to this image">¶</a></p>
 </div>
 <p>All modern programming languages organize memory as pictured in
 <a class="reference internal" href="#memorg"><span class="std std-numref">Fig. 16</span></a>. Alan Turing, at the dawn of electronic computing determined
 that programs could be stored in the memory of the computer, like the data that
 the program operates on. The term stored-program computer was born.</p>
 <p>In the late 1950’s to around 1960, IBM developed the first modern programming
-language, Algol 60 <span id="id24">[<a class="reference internal" href="#id44" title="Wikipedia. Algol 60. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/ALGOL_60.">Wik22a</a>]</span>. It supported nested functions and
+language, Algol 60 <span id="id24">[<a class="reference internal" href="#id47" title="Wikipedia. Algol 60. Wikipedia.org, accessed 2022. URL: https://en.wikipedia.org/wiki/ALGOL_60.">Wik22a</a>]</span>. It supported nested functions and
 recursion. Nested function definitions are largely possible due to scoped
 references in a programming language which is not a parallel programming
 concept, but can be used in parallel programs. To support recursion and function
@@ -3958,8 +3962,8 @@ anonymous inner class.</p>
 name is provided) inner class that extends the <em>Runnable</em> class. Notice that
 in this case the anonymous Runnable does not have arguments being passed to it.</p>
 </div>
-<div class="section" id="thread-safety-and-concurrency">
-<h2>Thread-Safety and Concurrency<a class="headerlink" href="#thread-safety-and-concurrency" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="critical-sections">
+<h2>Critical Sections<a class="headerlink" href="#critical-sections" title="Permalink to this headline">¶</a></h2>
 <div class="literal-block-wrapper docutils container" id="threadex3">
 <div class="code-block-caption"><span class="caption-number">Listing 3 </span><span class="caption-text">Counting without Synchronization</span><a class="headerlink" href="#threadex3" title="Permalink to this code">¶</a></div>
 <div class="highlight-java notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -4162,7 +4166,10 @@ synchronized keyword in a Java program. You can declare a region of your code to
 be synchronized on a arbitrary object to implement a critical section. To enter
 the critical section, the lock on the specified object is acquired and it is
 released when it exits the block of code.</p>
-<p>The Java Concurrency Tutorial <span id="id25">[<a class="reference internal" href="#id43" title="Oracle Java Documentation. The Java Tutorials. docs.oracle.com, accessed 2022. URL: https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html.">Doc22</a>]</span> has an excellent
+</div>
+<div class="section" id="concurrency-and-thread-safety">
+<h2>Concurrency and Thread-Safety<a class="headerlink" href="#concurrency-and-thread-safety" title="Permalink to this headline">¶</a></h2>
+<p>The Java Concurrency Tutorial <span id="id25">[<a class="reference internal" href="#id46" title="Oracle Java Documentation. The Java Tutorials. docs.oracle.com, accessed 2022. URL: https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html.">Doc22</a>]</span> has an excellent
 discussion of how this applies to Java. Take a look at this tutorial to learn
 about threads and how to create and run them.</p>
 <p><a class="reference external" href="https://stackoverflow.com/questions/40250112/fastest-way-to-measure-elapsed-time-in-java">https://stackoverflow.com/questions/40250112/fastest-way-to-measure-elapsed-time-in-java</a></p>
@@ -4182,6 +4189,25 @@ about threads and how to create and run them.</p>
 </div>
 <div class="section" id="queues">
 <h2>Queues<a class="headerlink" href="#queues" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id26">
+<h2>Chapter Summary<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id27">
+<h2>Review Questions<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="id28">
+<h2>Programming Problems<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Parallel Merge Sort</p></li>
+<li><p>ForkJoinPool Merge Sort</p></li>
+<li><p>Thread-Safe Queue</p></li>
+<li><p>Improve and Compare Thread-Safe Queue implementations. Test throughput. Plot it.</p></li>
+<li><p>Plot performace of different merge sort implementations.</p></li>
+<li><p>Implement a Thread Pool and use it in implementing recursive Merge sort.</p></li>
+</ol>
+</div></blockquote>
 </div>
 </div>
 <div class="section" id="chapter-5-c-programming">
@@ -4229,20 +4255,20 @@ about threads and how to create and run them.</p>
 </div>
 <div class="section" id="chapter-7-shared-memory">
 <h1>Chapter 7: Shared Memory<a class="headerlink" href="#chapter-7-shared-memory" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id26">
-<h2>Locks<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id29">
+<h2>Locks<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="id27">
-<h2>Queues<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id30">
+<h2>Queues<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 <div class="section" id="chapther-8-distributed-multprocessing">
 <h1>Chapther 8: Distributed Multprocessing<a class="headerlink" href="#chapther-8-distributed-multprocessing" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id28">
-<h2>Locks<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id31">
+<h2>Locks<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="id29">
-<h2>Queues<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id32">
+<h2>Queues<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="serialization">
 <h2>Serialization<a class="headerlink" href="#serialization" title="Permalink to this headline">¶</a></h2>
@@ -4264,14 +4290,14 @@ about threads and how to create and run them.</p>
 <h2>Process<a class="headerlink" href="#process" title="Permalink to this headline">¶</a></h2>
 <p>What happens in Python to start a process</p>
 </div>
-<div class="section" id="id30">
-<h2>Locks<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id33">
+<h2>Locks<a class="headerlink" href="#id33" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="managers">
 <h2>Managers<a class="headerlink" href="#managers" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="id31">
-<h2>Queues<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id34">
+<h2>Queues<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="pool">
 <h2>Pool<a class="headerlink" href="#pool" title="Permalink to this headline">¶</a></h2>
@@ -4288,60 +4314,60 @@ about threads and how to create and run them.</p>
 </div>
 <div class="section" id="references">
 <h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
-<div class="docutils container" id="id32">
+<div class="docutils container" id="id35">
 <dl class="citation">
-<dt class="label" id="id43"><span class="brackets"><a class="fn-backref" href="#id25">Doc22</a></span></dt>
+<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id25">Doc22</a></span></dt>
 <dd><p>Oracle Java Documentation. <em>The Java Tutorials</em>. docs.oracle.com, accessed 2022. URL: <a class="reference external" href="https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html">https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html</a>.</p>
 </dd>
-<dt class="label" id="id57"><span class="brackets">Gor15</span><span class="fn-backref">(<a href="#id12">1</a>,<a href="#id13">2</a>)</span></dt>
+<dt class="label" id="id60"><span class="brackets">Gor15</span><span class="fn-backref">(<a href="#id12">1</a>,<a href="#id13">2</a>)</span></dt>
 <dd><p>Steve Gordon. <em>Driving in the Fast Lane - CPU Pinning and NUMA Topology Awareness in OpenStack Compute</em>. Redhat Blog, 2015. URL: <a class="reference external" href="https://www.redhat.com/en/blog/driving-fast-lane-cpu-pinning-and-numa-topology-awareness-openstack-compute">https://www.redhat.com/en/blog/driving-fast-lane-cpu-pinning-and-numa-topology-awareness-openstack-compute</a>.</p>
 </dd>
-<dt class="label" id="id136"><span class="brackets"><a class="fn-backref" href="#id2">Kub20</a></span></dt>
+<dt class="label" id="id139"><span class="brackets"><a class="fn-backref" href="#id2">Kub20</a></span></dt>
 <dd><p>Ralph Kube. Moving fusion research into the big-and-fast data lane. Technical Report, DOE, 2020. URL: <a class="reference external" href="https://theory.pppl.gov/research/DOE%20Highlights/2020/DOEhighlight20200729Kube.pdf">https://theory.pppl.gov/research/DOE%20Highlights/2020/DOEhighlight20200729Kube.pdf</a>.</p>
 </dd>
-<dt class="label" id="id135"><span class="brackets"><a class="fn-backref" href="#id1">LtKT95</a></span></dt>
+<dt class="label" id="id138"><span class="brackets"><a class="fn-backref" href="#id1">LtKT95</a></span></dt>
 <dd><p>G. S. Lee and the KSTAR Team. Design and construction of the kstar tokamak. Technical Report, National Fusion R&amp;D Center, Korea Basic Science Institute, Taejon, Republic of Korea, 1995. URL: <a class="reference external" href="https://www.osti.gov/etdeweb/servlets/purl/20261539">https://www.osti.gov/etdeweb/servlets/purl/20261539</a>.</p>
 </dd>
-<dt class="label" id="id137"><span class="brackets"><a class="fn-backref" href="#id4">MRK+17</a></span></dt>
+<dt class="label" id="id140"><span class="brackets"><a class="fn-backref" href="#id4">MRK+17</a></span></dt>
 <dd><p>P. J. Mendygral, N. Radcliffe, K. Kandalla, D. Porter, B. J. O'Neill, C. Nolting, P. Edmon, J. M. F. Donnert, and T. W. Jones. WOMBAT: a scalable and high-performance astrophysical magnetohydrodynamics code. <em>The Astrophysical Journal Supplement Series</em>, 228(2):23, feb 2017. URL: <a class="reference external" href="https://doi.org/10.3847%2F1538-4365%2Faa5b9c">https://doi.org/10.3847%2F1538-4365%2Faa5b9c</a>, <a class="reference external" href="https://doi.org/10.3847/1538-4365/aa5b9c">doi:10.3847/1538-4365/aa5b9c</a>.</p>
 </dd>
-<dt class="label" id="id54"><span class="brackets"><a class="fn-backref" href="#id18">Mor19</a></span></dt>
+<dt class="label" id="id57"><span class="brackets"><a class="fn-backref" href="#id18">Mor19</a></span></dt>
 <dd><p>Timothy Prickett Morgan. How cray makes ethernet suited for hpc and ai with slingshot. <em>The Next Platform</em>, 2019. URL: <a class="reference external" href="https://www.nextplatform.com/2019/08/16/how-cray-makes-ethernet-suited-for-hpc-and-ai-with-slingshot">https://www.nextplatform.com/2019/08/16/how-cray-makes-ethernet-suited-for-hpc-and-ai-with-slingshot</a>.</p>
 </dd>
-<dt class="label" id="id55"><span class="brackets">Mor22</span><span class="fn-backref">(<a href="#id16">1</a>,<a href="#id17">2</a>)</span></dt>
+<dt class="label" id="id58"><span class="brackets">Mor22</span><span class="fn-backref">(<a href="#id16">1</a>,<a href="#id17">2</a>)</span></dt>
 <dd><p>Timothy Prickett Morgan. On the shortest spanning tree of a graph and the traveling salesman problem. <em>The Next Platform</em>, 2022. URL: <a class="reference external" href="https://www.nextplatform.com/2022/01/31/crays-slingshot-interconnect-is-at-the-heart-of-hpes-hpc-and-ai-ambitions">https://www.nextplatform.com/2022/01/31/crays-slingshot-interconnect-is-at-the-heart-of-hpes-hpc-and-ai-ambitions</a>.</p>
 </dd>
-<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id10">Ost22</a></span></dt>
+<dt class="label" id="id53"><span class="brackets"><a class="fn-backref" href="#id10">Ost22</a></span></dt>
 <dd><p>Igor Ostrovsky. <em>Gallery of Processor Cache Effects</em>. Igor Ostrovsky, accessed 2022. URL: <a class="reference external" href="http://igoro.com/archive/gallery-of-processor-cache-effects/">http://igoro.com/archive/gallery-of-processor-cache-effects/</a>.</p>
 </dd>
-<dt class="label" id="id140"><span class="brackets"><a class="fn-backref" href="#id7">PH98</a></span></dt>
+<dt class="label" id="id143"><span class="brackets"><a class="fn-backref" href="#id7">PH98</a></span></dt>
 <dd><p>David A. Patterson and John L. Hennessy. <em>Computer Organization and Design</em>. Morgan Kaufmann Publishers, 2nd edition, 1998. ISBN 15-586-0428-6.</p>
 </dd>
-<dt class="label" id="id138"><span class="brackets"><a class="fn-backref" href="#id3">Rog00</a></span></dt>
+<dt class="label" id="id141"><span class="brackets"><a class="fn-backref" href="#id3">Rog00</a></span></dt>
 <dd><p><em>COMPUTATION OF VISCOUS FLOW FOR A BOEING 777 AIRCRAFT IN LANDING CONFIGURATION</em>, 2000. URL: <a class="reference external" href="https://tinyurl.com/2vvp8473">https://tinyurl.com/2vvp8473</a>.</p>
 </dd>
-<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id9">Web22</a></span></dt>
+<dt class="label" id="id54"><span class="brackets"><a class="fn-backref" href="#id9">Web22</a></span></dt>
 <dd><p>System Verilog Website. <em>DDR4 SDRAM - Understanding Timing Parameters</em>. Systemverilog.io, accessed 2022. URL: <a class="reference external" href="https://www.systemverilog.io/understanding-ddr4-timing-parameters">https://www.systemverilog.io/understanding-ddr4-timing-parameters</a>.</p>
 </dd>
-<dt class="label" id="id44"><span class="brackets"><a class="fn-backref" href="#id24">Wik22a</a></span></dt>
+<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id24">Wik22a</a></span></dt>
 <dd><p>Wikipedia. <em>Algol 60</em>. Wikipedia.org, accessed 2022. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/ALGOL_60">https://en.wikipedia.org/wiki/ALGOL_60</a>.</p>
 </dd>
-<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id11">Wik22b</a></span></dt>
+<dt class="label" id="id51"><span class="brackets"><a class="fn-backref" href="#id11">Wik22b</a></span></dt>
 <dd><p>Wikipedia. <em>Cache coherence</em>. Wikipedia.org, accessed 2022. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/Cache_coherence">https://en.wikipedia.org/wiki/Cache_coherence</a>.</p>
 </dd>
-<dt class="label" id="id46"><span class="brackets"><a class="fn-backref" href="#id15">Wik22c</a></span></dt>
+<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id15">Wik22c</a></span></dt>
 <dd><p>Wikipedia. <em>Frontier (supercomputer)</em>. Wikipedia.org, accessed 2022. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/Frontier_(supercomputer)">https://en.wikipedia.org/wiki/Frontier_(supercomputer)</a>.</p>
 </dd>
-<dt class="label" id="id47"><span class="brackets"><a class="fn-backref" href="#id8">Wik22d</a></span></dt>
+<dt class="label" id="id50"><span class="brackets"><a class="fn-backref" href="#id8">Wik22d</a></span></dt>
 <dd><p>Wikipedia. <em>Memory timings</em>. Wikipedia.org, accessed 2022. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/Memory_timings">https://en.wikipedia.org/wiki/Memory_timings</a>.</p>
 </dd>
-<dt class="label" id="id49"><span class="brackets"><a class="fn-backref" href="#id14">Wik22e</a></span></dt>
+<dt class="label" id="id52"><span class="brackets"><a class="fn-backref" href="#id14">Wik22e</a></span></dt>
 <dd><p>Wikipedia. <em>SHMEM</em>. Wikipedia.org, accessed 2022. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/SHMEM">https://en.wikipedia.org/wiki/SHMEM</a>.</p>
 </dd>
-<dt class="label" id="id45"><span class="brackets"><a class="fn-backref" href="#id6">Wik22f</a></span></dt>
+<dt class="label" id="id48"><span class="brackets"><a class="fn-backref" href="#id6">Wik22f</a></span></dt>
 <dd><p>Wikipedia. <em>Von Neumann architecture</em>. Wikipedia.org, accessed 2022. URL: <a class="reference external" href="https://en.wikipedia.org/wiki/Von_Neumann_architecture">https://en.wikipedia.org/wiki/Von_Neumann_architecture</a>.</p>
 </dd>
-<dt class="label" id="id139"><span class="brackets"><a class="fn-backref" href="#id5">You18</a></span></dt>
+<dt class="label" id="id142"><span class="brackets"><a class="fn-backref" href="#id5">You18</a></span></dt>
 <dd><p>Anthony Young. Lessons from alpha zero (part 5): performance optimization. <em>Medium.com</em>, 2018. URL: <a class="reference external" href="https://medium.com/oracledevs/lessons-from-alpha-zero-part-5-performance-optimization-664b38dc509e">https://medium.com/oracledevs/lessons-from-alpha-zero-part-5-performance-optimization-664b38dc509e</a>.</p>
 </dd>
 </dl>

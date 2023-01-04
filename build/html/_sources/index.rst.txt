@@ -9,7 +9,7 @@
    :caption: Contents:
    
 
-Chapther 1: Introduction 
+Chapter 1: Introduction 
 ==================================================
 
 
@@ -1042,7 +1042,7 @@ The code in :numref:`threadex2` creates an instance of an anonymous (i.e. no
 name is provided) inner class that extends the *Runnable* class. Notice that 
 in this case the anonymous Runnable does not have arguments being passed to it. 
 
-Thread-Safety and Concurrency
+Critical Sections 
 +++++++++++++++++++++++++++++
 
 .. code-block:: java 
@@ -1204,6 +1204,9 @@ be synchronized on a arbitrary object to implement a critical section. To enter
 the critical section, the lock on the specified object is acquired and it is
 released when it exits the block of code.
 
+Concurrency and Thread-Safety
+++++++++++++++++++++++++++++++++
+
 The Java Concurrency Tutorial :cite:p:`javaconcurrency` has an excellent
 discussion of how this applies to Java. Take a look at this tutorial to learn 
 about threads and how to create and run them. 
@@ -1232,6 +1235,25 @@ Locks
 
 Queues
 +++++++
+
+Chapter Summary
+++++++++++++++++
+
+Review Questions 
++++++++++++++++++
+
+Programming Problems 
++++++++++++++++++++++
+
+   #. Parallel Merge Sort 
+   #. ForkJoinPool Merge Sort 
+   #. Thread-Safe Queue 
+   #. Improve and Compare Thread-Safe Queue implementations. Test throughput. Plot it. 
+   #. Plot performace of different merge sort implementations. 
+   #. Implement a Thread Pool and use it in implementing recursive Merge sort. 
+
+
+
 
 
 
