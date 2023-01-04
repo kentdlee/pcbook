@@ -1311,7 +1311,7 @@ Locks
 Queues 
 ++++++++
 
-Chapther 8: Distributed Multprocessing 
+Chapter 8: Distributed Multprocessing 
 =========================================
 
 Locks
