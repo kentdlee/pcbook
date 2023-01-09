@@ -327,14 +327,14 @@ some limitations to what that actually means, but it still effectively doubles
 the amount of work that can be parallelized per core. Other manufacturers, like
 AMD, have similar technology. While two sockets are possible on some boards, the
 Frontier supercomputer has just one
-`CPU per node coupled with four GPUs <https://tinyurl.com/4px3dkz8>`_ as shown 
+`CPU per node coupled with eight GPUs <https://tinyurl.com/4px3dkz8>`_ as shown 
 in :numref:`Frontiernode`.
 
 Hyperthreading means on high-performance nodes you can run up to 256
 processes/threads simultaneously which would be great if you could achieve that.
 This is called a theoretical maximum. It cannot be achieved, but ideally it
 would be nice. On Frontier there are 128 processes possible but that must be
-coupled with the work that can be carried out by each of the 4 on-node GPUs.
+coupled with the work that can be carried out by each of the 8 on-node GPUs.
 
 Processors can run more threads/processes than are simultaneously possible. In
 that case, multitasking becomes important since there may be more than 256
@@ -342,8 +342,8 @@ processes in the active set and the scheduler will keep them moving by switching
 between them. However, when there are more processes than can run
 simultaneously, we say the CPU(s) have become *over-subscribed*.
 Over-subscription can be a cause for *thrashing*. Thrashing occurs when
-switching between processes is taking more of the resources of the computer than
-the actual work getting done. You want to avoid over-subscription if possible.
+switching between processes is taking away from the computational power being 
+expended to solve the problem. Avoiding over-subscription is desirable.
 
 Multitasking can slightly speed up a program's execution because we can do work 
 on another process while others are waiting for I/O. Multiprocessing is where 
@@ -395,12 +395,13 @@ stages. In that case, the instruction has not had any side-effects yet, so it
 can just be discarded and any errant instructions behind it are also discarded
 and the next fetch will be from the right location, which restarts the pipeline.
 
-Pipelining leads to a three to five-fold speedup of execution. We want to avoid 
-writing code that restarts the pipeline if possible. There are some techniques 
-that compilers employ to help with this in high-performance code. One of those 
-techniques is called *loop-unfolding* where a loop's code is repeated some number 
-of times rather than jumping back to the start so the pipeline doesn't get 
-restarted as often. 
+Pipelining leads to a three to five-fold speedup of execution. We want to avoid
+writing code that restarts the pipeline if possible. There are some techniques
+that compilers employ to help with this in high-performance code. One of those
+techniques is called *loop-unfolding* where a loop's code is repeated some
+number of times rather than jumping back to the start so the pipeline doesn't
+get restarted as often. Compiler optimizations are only possible on compiled
+code, so languages like C and Fortran.
 
 Caching
 ++++++++
@@ -411,10 +412,10 @@ disrupted, it is important to begin fetching the right instruction as soon as
 possible to avoid disrupting the pipeline any longer than necessary.
 
 At odds with these needs is the architecture of memory. A general rule of thumb
-is the bigger then storage device, the slower the device operates for storage
+is the bigger the storage device, the slower the device operates for storage
 and retrieval. A CPU has very limited storage. Memory can hold Gigabytes of
-space. It cannot be written to or read from as fast as the CPU can execute
-:cite:p:`WikiMem`. Memory operates on the clock cycle like the CPU. On a 1000GHz
+data. Memory cannot be written to or read from as fast as the CPU can execute
+:cite:p:`WikiMem`. Memory operates on a clock cycle like the CPU. On a 1GHz
 system the clock cycle is 1 ns. Memory referred to as DDR3-2000 takes 7 clock
 cycles from when you supply the address to when the data is available. With DDR4
 it is 4 cycles to read data :cite:p:`verilog`. A write to DDR4 memory needs 5
@@ -532,7 +533,7 @@ Writing Values
 
 When the CPU writes a new value to memory, the cache must also be updated if it
 contains a copy of the memory being written. Typically the CPU writes the new
-data to its data cache and it up to the cache to send the new value out to
+data to its data cache and it is up to the cache to send the new value out to
 memory. Writing the value back to RAM can be done immediately when it is written
 to the cache. This is called a *write-through* cache where data is written to
 the cache and the write goes through immediately. The issue here is that this
@@ -563,10 +564,10 @@ threads. That synchronization typically occurs in memory that is shared between
 the processes or threads. We have seen that caches introduce copies of RAM to
 increase the system performance by placing data closer to the CPU in smaller,
 faster memory. But the introduction of caches also introduces copies of data. In
-addition, operations might think are safely executed in one step probably are
-not. Firstly, pipeline processors execute instructions in multiple steps by 
-design. But also, something as simple as adding one to a variable is not 
-necessarily done in one step. 
+addition, operations you might think are safely executed in one step probably
+are not. Firstly, pipeline processors execute instructions in multiple steps by
+design. Something as simple as adding one to a variable is not necessarily done
+in one step.
 
 Operations that can be performed in one step are called *atomic* operations.
 Atomic operations were so named because the atom used to be consider
