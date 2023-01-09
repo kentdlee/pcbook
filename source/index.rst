@@ -308,7 +308,7 @@ connected to the memory and other components of a computer. Multiprocessing is
 supported by the CPU and it is not an OS feature. However, support for
 multiprocessing must be a part of the OS for the computer to take full advantage
 of it. In a multiprocessing system more than one process is running at the same
-time. The scheduler then as multiple processes all executing timeslices before
+time. The schedule schedules a set of process all executing timeslices before
 the OS switches to the next. Nothing changes in :numref:`multitask` except
 that more then one process is active at any point in time.
 
@@ -970,7 +970,7 @@ A First Thread Example
       }
    }
 
-   public class TestThread {
+   public class ThreadExample1 {
 
       public static void main(String args[]) {
          Thread t1 = new Thread(new RunnableDemo( "Thread-1"));
@@ -1018,7 +1018,7 @@ anonymous inner class.
    :caption:  Anonymous Runnable
    :linenos:
 
-   public class AnonTestThread {
+   public class ThreadExample2 {
       public static void main(String args[]) {
          Thread t = new Thread(new Runnable() {
                @Override
@@ -1052,7 +1052,7 @@ Critical Sections
 
    import java.util.ArrayList;
 
-   public class DefectiveCountingThreads {
+   public class ThreadExample3 {
       static int count = 0;
       static int numThreads = 100;
 
@@ -1100,13 +1100,13 @@ non-deterministic behavior as shown here.
 
 .. code-block:: bash 
 
-   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java ThreadExample3
    The count is 20000
-   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java ThreadExample3
    The count is 19778
-   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java ThreadExample3
    The count is 19973
-   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java DefectiveCountingThreads
+   vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ java ThreadExample3
    The count is 20000
    vscode ➜ .../parallelcomputing/src/java/thread (main ✗) $ 
 
@@ -1118,13 +1118,14 @@ because any language is implemented in terms of machine instructions of the CPU.
 
 For this program to work deterministically, there needs to be some support from
 the CPU to make sure that the instructions needed to execute *count += 1* must
-be executed as a group. This is called a *critical section* of this parallel
-program. A critical section can be protected by the use of one or more *atomic* 
-instructions which are covered in more detail later in this text. 
+be executed as a group without any other thread executing this group at the same
+time. This is called a *critical section* of this parallel program. A critical
+section can be protected by the use of one or more *atomic* instructions which
+are covered in more detail later in this text.
 
 Java runs on a virtual machine which has facilities for providing the necessary
 means for implementing critical sections. In particular, a relatively low-level
-synchronization primitive called a *Lock* is incorporated to each and every Java
+synchronization primitive called a *Lock* is incorporated in each and every Java
 object. A *Lock* is acquired by a thread before a critical section. Other
 threads that try to acquire the lock will be blocked, waiting to acquire it.
 When the thread with the lock exits its critical section it *releases* the lock.
@@ -1192,7 +1193,7 @@ a misguided attempt at fixing the problem.
 The issue is that the synchronization needs to be between all the threads and
 this synchronized method is for the method *addOne* on a Runnable object and
 there is one Runnable object for each thread. We are synchronizing on a
-different object for each object. Remember, there is a lock per object in Java,
+different object for each Runnable. Remember, there is a lock per object in Java,
 not per method. For this purpose, the *threads* object is one instance that is
 visible to all the threads. :numref:`threadex5` correctly adds a critical
 section to the code to insure that counting is deterministic in this parallel
@@ -1204,12 +1205,85 @@ be synchronized on a arbitrary object to implement a critical section. To enter
 the critical section, the lock on the specified object is acquired and it is
 released when it exits the block of code.
 
-Concurrency and Thread-Safety
+Running Threads Efficiently
 ++++++++++++++++++++++++++++++++
 
 The Java Concurrency Tutorial :cite:p:`javaconcurrency` has an excellent
-discussion of how this applies to Java. Take a look at this tutorial to learn 
-about threads and how to create and run them. 
+discussion of how concurrency issues apply to Java. Take a look at this tutorial
+to learn about threads and how to create and run them. One of the topics not
+covered here but in the Java Concurrency Tutorial is the role of *wait* and
+*notifyAll*, which may be of some interest in multi-threaded Java applications.
+This is under the section on
+`guarded blocks <https://docs.oracle.com/javase/tutorial/essential/concurrency/guardmeth.html>`_.
+
+One of the often stated drawbacks of running small tasks in threads is the
+overhead of starting a thread. Java addresses this by introducing thread pools.
+A thread pool is a collection of threads that are all started and then wait for
+work to be doled out to them as it becomes available. This concept is available
+within most programming languages that have libraries for parallel computation.
+
+.. code-block:: java 
+   :name: threadex6
+   :caption:  A First Thread Pool Example
+   :linenos:
+
+   import java.util.ArrayList;
+   import java.util.concurrent.ExecutorService;
+   import java.util.concurrent.Executors;
+   import java.util.concurrent.TimeUnit;
+
+   public class ThreadExample6 {
+      static int pool_size = 10;
+      static int count = 0;
+      static int numTasks = 100;
+      static Object lock = new Object();
+      static boolean success = false;
+
+      public static void main(String args[]) {
+         ExecutorService pool = Executors.newFixedThreadPool(pool_size);
+
+         for (int k=0;k<numTasks;k++) 
+               pool.execute(new Runnable() {
+                              @Override
+                              public void run() {
+                                 for(int i = 200; i > 0; i--) {
+                                       synchronized(lock) {
+                                          count += 1;
+                                       }
+                                 }
+                              }
+                           });
+
+         pool.shutdown();
+
+         try {
+               success = pool.awaitTermination(100,TimeUnit.SECONDS);
+         } catch (InterruptedException ex) {
+               System.out.println("The operation was interrupted.");
+               System.exit(1);
+         }
+
+         if (success)
+               System.out.println("The count is " + count);
+         else 
+               System.out.println("The pool termination timed out.");
+      }
+   }   
+
+The code in :numref:`threadex6` shows how to create a fixed size thread pool. An
+*Executor* is the interface of an object that *execute*s *Runnable*s. Nothing is
+said about how the *Runnable* is run. An *ExecutorService* extends the
+*Executor* interface to allow for the service to be *shutdown* and so you can
+*awaitTermination*. So, a series of tasks can be given to a thread pool that
+implements the *ExecutorService* and they will be executed by a the number of
+threads in the thread pool.
+`Other kinds of thread pools are possible other than the fixed size thread pool <https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html>`_.
+
+The fixed size thread pool works well for the counting example above, but does
+not work as well if more threads need to run simultaneously to advance on the
+computation. Consider a recursive algorithm where we want to work on multiple branches 
+at the same time. A fixed size thread pool wouldn't work as well. 
+
 
 https://stackoverflow.com/questions/40250112/fastest-way-to-measure-elapsed-time-in-java
 

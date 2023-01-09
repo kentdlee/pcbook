@@ -136,7 +136,7 @@
 <li><a class="reference internal" href="#a-first-thread-example">A First Thread Example</a></li>
 <li><a class="reference internal" href="#anonymous-runnables">Anonymous Runnables</a></li>
 <li><a class="reference internal" href="#critical-sections">Critical Sections</a></li>
-<li><a class="reference internal" href="#concurrency-and-thread-safety">Concurrency and Thread-Safety</a></li>
+<li><a class="reference internal" href="#running-threads-efficiently">Running Threads Efficiently</a></li>
 <li><a class="reference internal" href="#thread-based-parallelism">Thread-based Parallelism</a></li>
 <li><a class="reference internal" href="#process-based-parallelism">Process-based Parallelism</a></li>
 <li><a class="reference internal" href="#locks">Locks</a></li>
@@ -468,7 +468,7 @@ connected to the memory and other components of a computer. Multiprocessing is
 supported by the CPU and it is not an OS feature. However, support for
 multiprocessing must be a part of the OS for the computer to take full advantage
 of it. In a multiprocessing system more than one process is running at the same
-time. The scheduler then as multiple processes all executing timeslices before
+time. The schedule schedules a set of process all executing timeslices before
 the OS switches to the next. Nothing changes in <a class="reference internal" href="#multitask"><span class="std std-numref">Fig. 3</span></a> except
 that more then one process is active at any point in time.</p>
 <div class="figure align-default" id="id147">
@@ -3877,7 +3877,7 @@ threads.</p>
    <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestThread</span> <span class="p">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadExample1</span> <span class="p">{</span>
 
    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">Thread</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">new</span> <span class="n">RunnableDemo</span><span class="p">(</span> <span class="s">&quot;Thread-1&quot;</span><span class="p">));</span>
@@ -3936,7 +3936,7 @@ anonymous inner class.</p>
 16
 17
 18
-19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">AnonTestThread</span> <span class="p">{</span>
+19</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadExample2</span> <span class="p">{</span>
    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
             <span class="nd">@Override</span>
@@ -3999,7 +3999,7 @@ in this case the anonymous Runnable does not have arguments being passed to it.<
 31
 32</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DefectiveCountingThreads</span> <span class="p">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadExample3</span> <span class="p">{</span>
    <span class="kd">static</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
    <span class="kd">static</span> <span class="kt">int</span> <span class="n">numThreads</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
 
@@ -4043,13 +4043,13 @@ instructions. On top of <em>atomic</em> instructions, other more complex synchro
 and communication instructures can be implemented.</p>
 <p>Consider the program given in <a class="reference internal" href="#threadex3"><span class="std std-numref">Listing 3</span></a>. Running this program, results in
 non-deterministic behavior as shown here.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java DefectiveCountingThreads
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java ThreadExample3
 The count is <span class="m">20000</span>
-vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java DefectiveCountingThreads
+vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java ThreadExample3
 The count is <span class="m">19778</span>
-vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java DefectiveCountingThreads
+vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java ThreadExample3
 The count is <span class="m">19973</span>
-vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java DefectiveCountingThreads
+vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $ java ThreadExample3
 The count is <span class="m">20000</span>
 vscode ➜ .../parallelcomputing/src/java/thread <span class="o">(</span>main ✗<span class="o">)</span> $
 </pre></div>
@@ -4060,12 +4060,13 @@ It doesn’t matter whether this is <em>Java</em>, <em>Python</em>, <em>C</em>, 
 because any language is implemented in terms of machine instructions of the CPU.</p>
 <p>For this program to work deterministically, there needs to be some support from
 the CPU to make sure that the instructions needed to execute <em>count += 1</em> must
-be executed as a group. This is called a <em>critical section</em> of this parallel
-program. A critical section can be protected by the use of one or more <em>atomic</em>
-instructions which are covered in more detail later in this text.</p>
+be executed as a group without any other thread executing this group at the same
+time. This is called a <em>critical section</em> of this parallel program. A critical
+section can be protected by the use of one or more <em>atomic</em> instructions which
+are covered in more detail later in this text.</p>
 <p>Java runs on a virtual machine which has facilities for providing the necessary
 means for implementing critical sections. In particular, a relatively low-level
-synchronization primitive called a <em>Lock</em> is incorporated to each and every Java
+synchronization primitive called a <em>Lock</em> is incorporated in each and every Java
 object. A <em>Lock</em> is acquired by a thread before a critical section. Other
 threads that try to acquire the lock will be blocked, waiting to acquire it.
 When the thread with the lock exits its critical section it <em>releases</em> the lock.
@@ -4156,7 +4157,7 @@ a misguided attempt at fixing the problem.</p>
 <p>The issue is that the synchronization needs to be between all the threads and
 this synchronized method is for the method <em>addOne</em> on a Runnable object and
 there is one Runnable object for each thread. We are synchronizing on a
-different object for each object. Remember, there is a lock per object in Java,
+different object for each Runnable. Remember, there is a lock per object in Java,
 not per method. For this purpose, the <em>threads</em> object is one instance that is
 visible to all the threads. <a class="reference internal" href="#threadex5"><span class="std std-numref">Listing 5</span></a> correctly adds a critical
 section to the code to insure that counting is deterministic in this parallel
@@ -4167,11 +4168,120 @@ be synchronized on a arbitrary object to implement a critical section. To enter
 the critical section, the lock on the specified object is acquired and it is
 released when it exits the block of code.</p>
 </div>
-<div class="section" id="concurrency-and-thread-safety">
-<h2>Concurrency and Thread-Safety<a class="headerlink" href="#concurrency-and-thread-safety" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="running-threads-efficiently">
+<h2>Running Threads Efficiently<a class="headerlink" href="#running-threads-efficiently" title="Permalink to this headline">¶</a></h2>
 <p>The Java Concurrency Tutorial <span id="id25">[<a class="reference internal" href="#id46" title="Oracle Java Documentation. The Java Tutorials. docs.oracle.com, accessed 2022. URL: https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html.">Doc22</a>]</span> has an excellent
-discussion of how this applies to Java. Take a look at this tutorial to learn
-about threads and how to create and run them.</p>
+discussion of how concurrency issues apply to Java. Take a look at this tutorial
+to learn about threads and how to create and run them. One of the topics not
+covered here but in the Java Concurrency Tutorial is the role of <em>wait</em> and
+<em>notifyAll</em>, which may be of some interest in multi-threaded Java applications.
+This is under the section on
+<a class="reference external" href="https://docs.oracle.com/javase/tutorial/essential/concurrency/guardmeth.html">guarded blocks</a>.</p>
+<p>One of the often stated drawbacks of running small tasks in threads is the
+overhead of starting a thread. Java addresses this by introducing thread pools.
+A thread pool is a collection of threads that are all started and then wait for
+work to be doled out to them as it becomes available. This concept is available
+within most programming languages that have libraries for parallel computation.</p>
+<div class="literal-block-wrapper docutils container" id="threadex6">
+<div class="code-block-caption"><span class="caption-number">Listing 6 </span><span class="caption-text">A First Thread Pool Example</span><a class="headerlink" href="#threadex6" title="Permalink to this code">¶</a></div>
+<div class="highlight-java notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.ExecutorService</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.Executors</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.TimeUnit</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadExample6</span> <span class="p">{</span>
+   <span class="kd">static</span> <span class="kt">int</span> <span class="n">pool_size</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+   <span class="kd">static</span> <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="kd">static</span> <span class="kt">int</span> <span class="n">numTasks</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+   <span class="kd">static</span> <span class="n">Object</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="p">();</span>
+   <span class="kd">static</span> <span class="kt">boolean</span> <span class="n">success</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+   <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[]</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ExecutorService</span> <span class="n">pool</span> <span class="o">=</span> <span class="n">Executors</span><span class="p">.</span><span class="na">newFixedThreadPool</span><span class="p">(</span><span class="n">pool_size</span><span class="p">);</span>
+
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">k</span><span class="o">&lt;</span><span class="n">numTasks</span><span class="p">;</span><span class="n">k</span><span class="o">++</span><span class="p">)</span>
+            <span class="n">pool</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="p">()</span> <span class="p">{</span>
+                           <span class="nd">@Override</span>
+                           <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="p">()</span> <span class="p">{</span>
+                              <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+                                    <span class="kd">synchronized</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span> <span class="p">{</span>
+                                       <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+                                    <span class="p">}</span>
+                              <span class="p">}</span>
+                           <span class="p">}</span>
+                        <span class="p">});</span>
+
+      <span class="n">pool</span><span class="p">.</span><span class="na">shutdown</span><span class="p">();</span>
+
+      <span class="k">try</span> <span class="p">{</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="n">pool</span><span class="p">.</span><span class="na">awaitTermination</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">InterruptedException</span> <span class="n">ex</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;The operation was interrupted.&quot;</span><span class="p">);</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="n">success</span><span class="p">)</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;The count is &quot;</span> <span class="o">+</span> <span class="n">count</span><span class="p">);</span>
+      <span class="k">else</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;The pool termination timed out.&quot;</span><span class="p">);</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>The code in <a class="reference internal" href="#threadex6"><span class="std std-numref">Listing 6</span></a> shows how to create a fixed size thread pool. An
+<em>Executor</em> is the interface of an object that <em>execute*s *Runnable*s. Nothing is
+said about how the *Runnable</em> is run. An <em>ExecutorService</em> extends the
+<em>Executor</em> interface to allow for the service to be <em>shutdown</em> and so you can
+<em>awaitTermination</em>. So, a series of tasks can be given to a thread pool that
+implements the <em>ExecutorService</em> and they will be executed by a the number of
+threads in the thread pool.
+<a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Executors.html">Other kinds of thread pools are possible other than the fixed size thread pool</a>.</p>
+<p>The fixed size thread pool works well for the counting example above, but does
+not work as well if more threads need to run simultaneously to advance on the
+computation. Consider a recursive algorithm where we want to work on multiple branches
+at the same time. A fixed size thread pool wouldn’t work as well.</p>
 <p><a class="reference external" href="https://stackoverflow.com/questions/40250112/fastest-way-to-measure-elapsed-time-in-java">https://stackoverflow.com/questions/40250112/fastest-way-to-measure-elapsed-time-in-java</a></p>
 <p><a class="reference external" href="https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ThreadPoolExecutor.html">https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ThreadPoolExecutor.html</a></p>
 <p><a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html">https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ForkJoinPool.html</a></p>
