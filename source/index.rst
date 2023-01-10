@@ -387,13 +387,111 @@ in the previous pipeline register, or in the case of the fetch stage, a fetch is
 executed on memory to get the next instruction. This is called *pipelining* in
 the CPU, or *pipelined* execution.
 
+.. code-block:: C 
+   :name: cloop
+   :caption:  A Very Short C Program 
+   :linenos:
+
+   #include <stdio.h>
+
+   int main(int argc, char* argv[]) {
+      int sum = 0;
+
+      int k;
+
+      for (k=0;k<10;k++)
+         sum += k;
+
+      printf("The sum of 1..9 is %d\n", sum);
+   }
+
 Sometimes the pipeline is disrupted. This occurs when an if-statement or loop is
-executed which results in executing a jump instruction in the CPU.
+executed which results in executing a jump instruction in the CPU. Consider the 
+C program in :numref:`cloop`.
+
+.. code-block:: asm
+   :name: asmloop
+   :caption:  A Very Short C Program's Intel Assembly
+   :linenos:
+
+      .file	"test.c"
+      .text
+      .section	.rodata
+   .LC0:
+      .string	"The sum of 1..9 is %d\n"
+      .text
+      .globl	main
+      .type	main, @function
+   main:
+   .LFB0:
+      .cfi_startproc
+      endbr64
+      pushq	%rbp              # rbp is the frame pointer 
+      .cfi_def_cfa_offset 16
+      .cfi_offset 6, -16
+      movq	%rsp, %rbp        # rsp is the stack pointer
+      .cfi_def_cfa_register 6
+      subq	$32, %rsp
+      movl	%edi, -20(%rbp)
+      movq	%rsi, -32(%rbp)
+      movl	$0, -8(%rbp)
+      movl	$0, -4(%rbp)
+      jmp	.L2
+   .L3:
+      movl	-4(%rbp), %eax
+      addl	%eax, -8(%rbp)
+      addl	$1, -4(%rbp)
+   .L2:
+      cmpl	$9, -4(%rbp)
+      jle	.L3
+      movl	-8(%rbp), %eax
+      movl	%eax, %esi
+      leaq	.LC0(%rip), %rax
+      movq	%rax, %rdi
+      movl	$0, %eax
+      call	printf@PLT
+      movl	$0, %eax
+      leave
+      .cfi_def_cfa 7, 8
+      ret
+      .cfi_endproc
+   .LFE0:
+      .size	main, .-main
+      .ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
+      .section	.note.GNU-stack,"",@progbits
+      .section	.note.gnu.property,"a"
+      .align 8
+      .long	1f - 0f
+      .long	4f - 1f
+      .long	5
+   0:
+      .string	"GNU"
+   1:
+      .align 8
+      .long	0xc0000002
+      .long	3f - 2f
+   2:
+      .long	0x3
+   3:
+      .align 8
+   4:
+
+
 Knowing which instruction will be next is not possible all the time in those
 situations. When that occurs, the CPU figures it out in the decode or execute
 stages. In that case, the instruction has not had any side-effects yet, so it
 can just be discarded and any errant instructions behind it are also discarded
 and the next fetch will be from the right location, which restarts the pipeline.
+Consider the pipeline for the code shown in :numref:`pipeline2` when the *jmp*
+instruction is in the decode pipeline stage. The two instructions behind it in the 
+pipeline will be discarded and there will be a stall in the pipeline while it fills 
+back up from the target of the jump. 
+
+.. _pipeline2:
+
+.. figure:: images/pipelineasm.png
+
+  A Completely Made Up Example of a Pipeline Jump (Intel Assembly)
 
 Pipelining leads to a three to five-fold speedup of execution. We want to avoid
 writing code that restarts the pipeline if possible. There are some techniques
@@ -601,12 +699,12 @@ of a pointer on the system. A pointer is an address of a byte in the RAM of the
 system. Well, almost. There are multiple processes executing on a system, either
 through multi-tasking or multi-processing or both. To protect these processes
 from each other, each process has access to it's own 64-bit address space.
-Sixty-four bit pointers means that a single process can access 16,384 Petabytes!
-That's not going to happen any time soon. Instead, a process is allowed to
-access areas within this immense address space. These areas are called pages.
-The address space is split into pages and a process accesses its data and
-program instructions in pages. While page sizes may vary between operating
-systems, a typical page size is 4K.
+Having access to sixty-four bit pointers means that a single process can access
+16,384 Petabytes! That's not going to happen any time soon. Instead, a process
+is allowed to access areas within this immense address space. These areas are
+called pages. The address space is split into pages and a process accesses its
+data and program instructions in pages. While page sizes may vary between
+operating systems, a typical page size is 4K.
 
 Operating Systems (i.e. OS's) and CPUs work together to support what is called 
 virtual memory. When a process is running, any pointer access to RAM is first 
