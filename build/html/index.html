@@ -691,15 +691,18 @@ main:
 </pre></div>
 </td></tr></table></div>
 </div>
-<p>Knowing which instruction will be next is not possible all the time in those
-situations. When that occurs, the CPU figures it out in the decode or execute
-stages. In that case, the instruction has not had any side-effects yet, so it
-can just be discarded and any errant instructions behind it are also discarded
-and the next fetch will be from the right location, which restarts the pipeline.
-Consider the pipeline for the code shown in <a class="reference internal" href="#pipeline2"><span class="std std-numref">Fig. 6</span></a> when the <em>jmp</em>
-instruction is in the decode pipeline stage. The two instructions behind it in the
-pipeline will be discarded and there will be a stall in the pipeline while it fills
-back up from the target of the jump.</p>
+<p>Now look at the assembly for the C program given in <a class="reference internal" href="#asmloop"><span class="std std-numref">Listing 2</span></a>. Lines
+25-30 of that code make up the loop of the C program. Assume we are about to
+execute that loop for the first time and come to the instruction on line 23.
+Knowing which instruction will be next is not always possible. When that occurs,
+the CPU figures it out in the decode or execute stages. In that case, the
+instruction has not had any side-effects yet, so it can just be discarded and
+any errant instructions behind it are also discarded and the next fetch will be
+from the right location, which restarts the pipeline. Consider the pipeline for
+the code shown in <a class="reference internal" href="#pipeline2"><span class="std std-numref">Fig. 6</span></a> when the <em>jmp</em> instruction is in the
+decode pipeline stage. The two instructions behind it in the pipeline will be
+discarded and there will be a stall in the pipeline while it fills back up from
+the target of the jump.</p>
 <div class="figure align-default" id="id149">
 <span id="pipeline2"></span><img alt="_images/pipelineasm.png" src="_images/pipelineasm.png" />
 <p class="caption"><span class="caption-number">Fig. 6 </span><span class="caption-text">A Completely Made Up Example of a Pipeline Jump (Intel Assembly)</span><a class="headerlink" href="#id149" title="Permalink to this image">¶</a></p>

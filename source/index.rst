@@ -477,15 +477,18 @@ C program in :numref:`cloop`.
    4:
 
 
-Knowing which instruction will be next is not possible all the time in those
-situations. When that occurs, the CPU figures it out in the decode or execute
-stages. In that case, the instruction has not had any side-effects yet, so it
-can just be discarded and any errant instructions behind it are also discarded
-and the next fetch will be from the right location, which restarts the pipeline.
-Consider the pipeline for the code shown in :numref:`pipeline2` when the *jmp*
-instruction is in the decode pipeline stage. The two instructions behind it in the 
-pipeline will be discarded and there will be a stall in the pipeline while it fills 
-back up from the target of the jump. 
+Now look at the assembly for the C program given in :numref:`asmloop`. Lines
+25-30 of that code make up the loop of the C program. Assume we are about to
+execute that loop for the first time and come to the instruction on line 23.
+Knowing which instruction will be next is not always possible. When that occurs,
+the CPU figures it out in the decode or execute stages. In that case, the
+instruction has not had any side-effects yet, so it can just be discarded and
+any errant instructions behind it are also discarded and the next fetch will be
+from the right location, which restarts the pipeline. Consider the pipeline for
+the code shown in :numref:`pipeline2` when the *jmp* instruction is in the
+decode pipeline stage. The two instructions behind it in the pipeline will be
+discarded and there will be a stall in the pipeline while it fills back up from
+the target of the jump.
 
 .. _pipeline2:
 
